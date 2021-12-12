@@ -21,6 +21,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/user/getAll", method = RequestMethod.GET)
 	public BaseResponse getAllUser() {
 		return userService.getAllUsers();
