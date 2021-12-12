@@ -23,8 +23,19 @@ public class AuthUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     	com.example.demo.database.entity.User user = this.userRepo.findByName(username);
-    	
+		if (user == null){
+            throw new UsernameNotFoundException(userName);
+        }
         return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+		//return new User(user.getUsername(),user.getPassword(), getAuthority(user));
     }
+
+	// private Set getAuthority(User user) {
+    //     Set authorities = new HashSet();
+    //     user.getRoles().forEach(role -> {
+    //         authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+    //     });
+    //     return authorities;
+    // }
 }
 
