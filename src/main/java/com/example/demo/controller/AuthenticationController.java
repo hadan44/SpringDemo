@@ -17,21 +17,23 @@ import com.example.demo.base.BaseResponse;
 import com.example.demo.dto.UserDto;
 import com.example.demo.service.AuthUserDetailService;
 
-import io.swagger.annotations.ApiOperation;
-
 @RestController
 public class AuthenticationController {
-	@Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private AuthUserDetailService authUserDetailService;
 
-    @Autowired
+    
     private JwtUtil jwtUtil;
     
+    @Autowired
+    AuthenticationController(AuthenticationManager authenticationManager,AuthUserDetailService authUserDetailService,JwtUtil jwtUtil ){
+    	this.authenticationManager = authenticationManager;
+    	this.authUserDetailService = authUserDetailService;
+    	this.jwtUtil = jwtUtil;
+    }
+    
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
-    @ApiOperation(value = "authentication api", response = ResponseEntity.class)
     public ResponseEntity<BaseResponse> generateToken(@RequestBody UserDto userDto) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));

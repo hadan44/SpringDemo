@@ -1,18 +1,22 @@
 package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.http.ResponseEntity;
 import com.example.demo.base.BaseResponse;
 import com.example.demo.database.entity.User;
 import com.example.demo.dto.UserDto;
 import com.example.demo.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
 	private UserService userService;
 	
@@ -23,28 +27,43 @@ public class UserController {
 	
 	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/user/getAll", method = RequestMethod.GET)
-	public BaseResponse getAllUser() {
+	@Operation(summary = "Get user by ID", description = "This can only be done by admin.", 
+	security = { @SecurityRequirement(name = "bearer-key") },
+	tags = { "user" })
+	public ResponseEntity<BaseResponse> getAllUser() {
 		return userService.getAllUsers();
 	}
 	
 	@RequestMapping(value = "/user/getById", method = RequestMethod.GET)
-	public BaseResponse findById(@RequestParam int userId) {
+	@Operation(summary = "Find user by ID", description = "This can only be done by admin.", 
+	security = { @SecurityRequirement(name = "bearer-key") },
+	tags = { "user" })
+	public ResponseEntity<BaseResponse> findById(@RequestParam int userId) {
 		return userService.findById(userId);
 	}
 	
 	@RequestMapping(value = "/user/getByName", method = RequestMethod.GET)
-	public BaseResponse findByName(@RequestParam String name) {
+	@Operation(summary = "Find user by name", description = "This can only be done by admin.", 
+	security = { @SecurityRequirement(name = "bearer-key") },
+	tags = { "user" })
+	public ResponseEntity<BaseResponse> findByName(@RequestParam String name) {
 		return userService.findByName(name);
 	}
 	
 	@RequestMapping(value = "/user/createNewUser", method = RequestMethod.POST)
-	public BaseResponse creatNewUser(@RequestBody UserDto userDto) {
+	@Operation(summary = "Create new user", description = "This can only be done by admin.", 
+	security = { @SecurityRequirement(name = "bearer-key") },
+	tags = { "user" })
+	public ResponseEntity<BaseResponse> creatNewUser(@RequestBody UserDto userDto) {
 		User user = userDto.convertToUser();
 		return userService.createNewUser(user);
 	}
 	
 	@RequestMapping(value = "/user/deleteById", method = RequestMethod.DELETE)
-	public BaseResponse deleteById(@RequestParam int userId) {
+	@Operation(summary = "Delete user by ID", description = "This can only be done by admin.", 
+	security = { @SecurityRequirement(name = "bearer-key") },
+	tags = { "user" })
+	public ResponseEntity<BaseResponse> deleteById(@RequestParam int userId) {
 		return userService.deleteUser(userId);
 	}
 	

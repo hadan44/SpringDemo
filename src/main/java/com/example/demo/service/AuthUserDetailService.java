@@ -24,7 +24,7 @@ public class AuthUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     	com.example.demo.database.entity.User user = this.userRepo.findByName(username);
 		if (user == null){
-            throw new UsernameNotFoundException(userName);
+            throw new UsernameNotFoundException(username);
         }
         return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
 		//return new User(user.getUsername(),user.getPassword(), getAuthority(user));

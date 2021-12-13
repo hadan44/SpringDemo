@@ -1,10 +1,14 @@
 package com.example.demo.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import com.example.demo.database.entity.User;
 
 public class UserDto {
 	
+	@NotBlank
 	private String username;
+	@NotBlank
 	private String password;
 	
 	public String getUsername() {

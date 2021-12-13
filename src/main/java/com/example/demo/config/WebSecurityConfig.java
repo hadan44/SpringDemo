@@ -1,8 +1,6 @@
 package com.example.demo.config;
 
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +25,25 @@ import com.example.demo.service.AuthUserDetailService;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
-		
-		@Autowired
 	    private AuthUserDetailService userDetailsService;
 	
-	    @Autowired
 	    private JwtRequestFilter jwtFilter;
-		
+	    
+	    @Autowired 
+	    WebSecurityConfig(AuthUserDetailService userDetailsService,JwtRequestFilter jwtFilter ){
+	    	this.userDetailsService = userDetailsService;
+	    	this.jwtFilter = jwtFilter;
+	    }
+	    
 		@Bean
 		public PasswordEncoder passwordEncoder() {
 			return new BCryptPasswordEncoder(BCryptVersion.$2B, 7);
 		}
+	    
+//	    @Bean
+//	    public PasswordEncoder passwordEncoder(){
+//	        return NoOpPasswordEncoder.getInstance();
+//	    }
 		
 	    @Override
 	    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -54,11 +60,11 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http.csrf().disable().authorizeRequests()
-	        		.antMatchers("/swagger-ui", "/authenticate").permitAll()
+	        		.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**","swagger-ui/index.html#/", "/auth").permitAll()
 	        		.anyRequest().authenticated()
 	                .and().exceptionHandling().and().sessionManagement()
 	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-	                .and().httpBasic();
+	                .and().httpBasic().disable();
 	        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 	        http.cors();
 	    }
